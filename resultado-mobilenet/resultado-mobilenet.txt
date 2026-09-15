@@ -1,0 +1,11 @@
+==================================================
+MÉTRICAS GLOBAIS - 5-FOLD CROSS-VALIDATION
+==================================================
+[ MODELO DEDICADO: ALTURA ]
+Coeficiente de Determinação (R²): 0.2031
+Erro Quadrático Médio (RMSE): 4.8654 cm
+
+[ MODELO DEDICADO: BIOMASSA ]
+Coeficiente de Determinação (R²): 0.5419
+Erro Quadrático Médio (RMSE): 319.6064 kg/ha
+==================================================
