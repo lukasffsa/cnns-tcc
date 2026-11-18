@@ -1,0 +1,39 @@
+Media (desvio padrao) entre repeticoes, metricas sobre todas as imagens fora do fold
+
+publicado_imagem | altura
+  lasso                    n_rep=10  R2=    0.526 (0.009)  WI=    0.830 (0.004)  RMSE=    3.752 (0.036)  MAE=    2.969 (0.026)  MAPE=    7.814 (0.063)
+  svr                      n_rep=10  R2=    0.744 (0.021)  WI=    0.923 (0.010)  RMSE=    2.756 (0.111)  MAE=    2.147 (0.199)  MAPE=    5.552 (0.533)
+  mlp                      n_rep=10  R2=    0.759 (0.019)  WI=    0.934 (0.007)  RMSE=    2.675 (0.105)  MAE=    2.007 (0.106)  MAPE=    5.169 (0.255)
+  media_treino             n_rep=10  R2=   -0.008 (0.005)  WI=    0.029 (0.007)  RMSE=    5.472 (0.015)  MAE=    4.290 (0.012)  MAPE=   11.602 (0.032)
+  media_cultivar_momento   n_rep=10  R2=    0.566 (0.005)  WI=    0.845 (0.002)  RMSE=    3.589 (0.020)  MAE=    2.958 (0.017)  MAPE=    7.785 (0.044)
+
+publicado_imagem | biomassa
+  lasso                    n_rep=10  R2=    0.272 (0.017)  WI=    0.662 (0.008)  RMSE=  385.666 (4.379)  MAE=  318.433 (3.504)  MAPE=   45.132 (0.503)
+  svr                      n_rep=10  R2=    0.636 (0.017)  WI=    0.886 (0.008)  RMSE=  272.638 (6.379)  MAE=  205.572 (10.648)  MAPE=   26.727 (2.015)
+  mlp                      n_rep=10  R2=    0.571 (0.018)  WI=    0.880 (0.006)  RMSE=  296.101 (6.295)  MAE=  222.990 (6.302)  MAPE=   28.915 (1.437)
+  media_treino             n_rep=10  R2=   -0.010 (0.010)  WI=    0.035 (0.013)  RMSE=  454.220 (2.345)  MAE=  386.382 (1.724)  MAPE=   56.627 (0.251)
+  media_cultivar_momento   n_rep=10  R2=    0.108 (0.012)  WI=    0.484 (0.007)  RMSE=  426.788 (2.971)  MAE=  350.400 (2.472)  MAPE=   48.780 (0.350)
+
+publicado_parcela | altura
+  lasso                    n_rep=30  R2=    0.475 (0.021)  WI=    0.808 (0.010)  RMSE=    3.947 (0.079)  MAE=    3.123 (0.073)  MAPE=    8.233 (0.191)
+  svr                      n_rep=30  R2=    0.487 (0.016)  WI=    0.815 (0.007)  RMSE=    3.905 (0.060)  MAE=    3.139 (0.085)  MAPE=    8.241 (0.210)
+  mlp                      n_rep=30  R2=    0.498 (0.024)  WI=    0.823 (0.011)  RMSE=    3.861 (0.093)  MAE=    3.044 (0.081)  MAPE=    7.980 (0.227)
+  media_treino             n_rep=30  R2=   -0.024 (0.014)  WI=    0.042 (0.009)  RMSE=    5.515 (0.037)  MAE=    4.318 (0.026)  MAPE=   11.674 (0.067)
+  media_cultivar_momento   n_rep=30  R2=    0.530 (0.021)  WI=    0.832 (0.008)  RMSE=    3.735 (0.082)  MAE=    3.082 (0.071)  MAPE=    8.110 (0.195)
+
+publicado_parcela | biomassa
+  lasso                    n_rep=30  R2=    0.174 (0.040)  WI=    0.592 (0.037)  RMSE=  410.521 (9.963)  MAE=  335.139 (6.947)  MAPE=   47.421 (1.260)
+  svr                      n_rep=30  R2=    0.190 (0.053)  WI=    0.615 (0.057)  RMSE=  406.529 (13.258)  MAE=  331.201 (11.102)  MAPE=   47.070 (2.083)
+  mlp                      n_rep=30  R2=    0.142 (0.065)  WI=    0.645 (0.063)  RMSE=  418.289 (15.781)  MAE=  339.268 (14.074)  MAPE=   47.247 (2.534)
+  media_treino             n_rep=30  R2=   -0.048 (0.019)  WI=    0.058 (0.012)  RMSE=  462.688 (4.298)  MAE=  393.635 (4.138)  MAPE=   57.602 (0.652)
+  media_cultivar_momento   n_rep=30  R2=    0.024 (0.033)  WI=    0.435 (0.019)  RMSE=  446.486 (7.475)  MAE=  366.263 (6.222)  MAPE=   50.976 (0.988)
+
+aninhado_parcela | altura
+  lasso                    n_rep=10  R2=    0.407 (0.027)  WI=    0.773 (0.011)  RMSE=    4.197 (0.094)  MAE=    3.327 (0.088)  MAPE=    8.773 (0.215)
+  svr                      n_rep=10  R2=    0.370 (0.041)  WI=    0.767 (0.012)  RMSE=    4.323 (0.140)  MAE=    3.430 (0.132)  MAPE=    9.043 (0.321)
+  mlp                      n_rep=10  R2=    0.378 (0.086)  WI=    0.753 (0.066)  RMSE=    4.288 (0.295)  MAE=    3.395 (0.238)  MAPE=    8.959 (0.628)
+
+aninhado_parcela | biomassa
+  lasso                    n_rep=10  R2=    0.067 (0.070)  WI=    0.536 (0.026)  RMSE=  436.101 (16.434)  MAE=  354.419 (12.762)  MAPE=   50.082 (1.870)
+  svr                      n_rep=10  R2=    0.026 (0.101)  WI=    0.532 (0.036)  RMSE=  445.475 (23.171)  MAE=  361.282 (16.887)  MAPE=   50.636 (2.519)
+  mlp                      n_rep=10  R2=   -0.121 (0.096)  WI=    0.439 (0.063)  RMSE=  478.121 (20.331)  MAE=  385.856 (17.625)  MAPE=   54.512 (3.735)

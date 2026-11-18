@@ -1,180 +1,281 @@
-# Predição de altura e biomassa de alfafa por imagens RGB
+# Predição de Altura e Biomassa de Alfafa a partir de Imagens RGB
 
-## Visão geral
+Este projeto apresenta um pipeline experimental para estimar a altura e a biomassa da alfafa por meio de imagens RGB. A solução compara redes neurais convolucionais, um modelo MLP baseado em descritores de textura e o baseline móvel originalmente utilizado pelo aplicativo Pastagem.
 
-Este projeto tem como objetivo estimar, a partir de imagens de plantas de alfafa, duas variáveis agronômicas importantes: altura e biomassa. A abordagem utiliza redes neurais convolucionais pré-treinadas em imagens naturais e adapta o modelo para regressão, buscando inferir valores contínuos relacionados ao crescimento da cultura.
-
-O fluxo de trabalho combina:
-
-- processamento e organização do conjunto de dados;
-- alinhamento de imagens com metadados agronômicos;
-- uso de transfer learning com arquiteturas populares de visão computacional;
-- validação cruzada por folds para avaliação robusta;
-- análise de métricas de regressão e visualização dos resultados.
-
-## Motivação
-
-A determinação da altura e da biomassa da alfafa é fundamental para monitoramento agronômico, avaliação de produtividade e tomada de decisão em sistemas de manejo da cultura. Métodos tradicionais frequentemente dependem de medições manuais e demoradas, enquanto a visão computacional oferece uma alternativa mais escalável e automatizada.
+O trabalho combina visão computacional, validação cruzada por parcela, normalização dos alvos, métricas de regressão e ferramentas de comparação entre resultados.
 
 ## Objetivos
 
-- desenvolver um pipeline de regressão visual para estimar altura da alfafa;
-- estimar a biomassa da cultura a partir das imagens;
-- comparar diferentes arquiteturas de redes convolucionais;
-- avaliar o desempenho com validação cruzada em múltiplas dobras;
-- gerar métricas quantitativas e gráficos de dispersão dos resultados.
+- Estimar a altura das plantas em centímetros.
+- Estimar a biomassa seca em kg/ha.
+- Comparar arquiteturas CNN com modelos treinados a partir de descritores clássicos.
+- Evitar vazamento entre parcelas durante a validação cruzada.
+- Produzir métricas, previsões out-of-fold e gráficos diagnósticos reproduzíveis.
+- Manter compatibilidade com os resultados e pesos do baseline desenvolvido em Java.
 
-## Arquiteturas avaliadas
+## Abordagens avaliadas
 
-O projeto inclui experimentos com redes de transferência bem conhecidas:
+### Redes convolucionais
 
-- ResNet50;
-- EfficientNet-B0;
-- MobileNetV3 Large.
+As redes CNN utilizam pesos pré-treinados no ImageNet e têm as últimas etapas de extração ajustadas ao domínio agrícola:
 
-Em todas as abordagens, a etapa inicial do modelo é mantida com pesos pré-treinados do ImageNet e algumas camadas finais são descongeladas para adaptação ao domínio agrícola. O cabeçalho final é substituído por uma camada de regressão linear unidimensional, adequada para predição contínua.
+| Modelo | Backbone | Ajuste |
+| --- | --- | --- |
+| MLP | Descritores de textura | Treinado com vetores de duas dimensões |
+| MobileNetV3-Large | MobileNetV3-Large | Últimos três blocos descongelados |
+| ResNet50 | ResNet50 | `layer4` descongelada |
+| EfficientNet-B0 | EfficientNet-B0 | Estágios finais 7 e 8 descongelados |
 
-## Base de dados
+A saída final é uma regressão escalar. Altura e biomassa são treinadas por modelos separados.
 
-Os dados utilizados são compostos por:
+### Baseline Pastagem
 
-- imagens armazenadas em dataset/images;
-- metadados de campo em dataset/metadata.csv.
+O diretório `pastagem_baseline/` contém uma implementação em Python do baseline móvel:
 
-O arquivo CSV contém indicadores agronômicos como altura, biomassa, cultivar, parcela e fertilização com K2O. A associação entre imagem e amostra ocorre a partir de identificadores gerados pela combinação da parcela e do mês do registro.
+1. Conversão da imagem RGB para níveis de cinza.
+2. Construção de uma matriz de coocorrência 8x8.
+3. Cálculo de entropia, homogeneidade, desvio padrão do cinza e percentual de área escura.
+4. Cálculo do índice GLI.
+5. Aplicação das redes MLP e da regressão linear exportadas do aplicativo Java.
 
-A estrutura do conjunto é organizada para permitir que cada imagem seja associada ao valor real de altura e biomassa correspondente, seguindo um processo de normalização para estabilizar o treinamento.
+Os pesos originais são armazenados em `pastagem_baseline/pesos_app.json`.
 
-## Pipeline do projeto
+## Conjunto de dados
 
-### 1. Carregamento e pré-processamento
+Os dados utilizados ficam em `dataset/`:
 
-A classe AlfalfaDataset realiza:
+- `dataset/images/`: imagens RGB das parcelas.
+- `dataset/metadata.csv`: medidas de campo e informações das parcelas.
+- Como as imagens são de domínio restrito da Embrapa, apenas o metadata.csv ficará disponível no repositório. Esse csv contem a ligação das imagens com seus valores de referência e é apenas o que o usuário precisa para ropdar o código.
 
-- leitura do CSV com separador semicolon;
-- seleção das colunas relevantes;
-- associação entre imagem e linha do metadado;
-- carregamento da imagem em RGB;
-- conversão dos alvos em valores normalizados;
-- retorno do tensor da imagem e dos valores de altura e biomassa.
+Os nomes das imagens associam a observação à parcela e ao momento de coleta. O arquivo de metadados contém, entre outros campos:
 
-### 2. Transformações de dados
+- Parcela.
+- Cultivar.
+- Altura média em centímetros.
+- Massa seca em kg/ha.
+- Fertilização com K2O.
 
-São aplicadas transformações de pré-processamento e aumento de dados, incluindo:
+Para os experimentos CNN atuais, `pastagem_baseline/resultados/folds_por_parcela.csv` define a divisão por parcelas. O código impede:
 
-- resize para resolução 224x224;
-- flip horizontal e vertical;
-- rotação moderada;
-- ajuste de brilho, contraste e saturação;
-- normalização com estatísticas do ImageNet.
+- Identificadores repetidos.
+- Separação de imagens da mesma parcela entre treino e teste.
+- Referências negativas.
+- Valores não finitos no conjunto de dados.
 
-Essas transformações ajudam a aumentar a robustez do treinamento e a reduzir o risco de overfitting.
+A imagem de biomassa da parcela `CR17` é excluída explicitamente do experimento de biomassa para preservar a comparação com o baseline recebido, mas caso o usuário queira rodar com essa parcela, os valores de referência já estão ajustados corretamente.
 
-### 3. Regressão por redes convolucionais
+## Métricas
 
-A implementação usa regressão com perda MSE e otimizador Adam. O treinamento é realizado separadamente para cada alvo:
+A avaliação considera:
 
-- modelo dedicado para altura;
-- modelo dedicado para biomassa.
+- R².
+- Índice de Willmott (WI).
+- RMSE.
+- MAE.
+- MAPE.
+- Bias médio.
+- Previsões out-of-fold.
 
-A ideia é especializar cada rede para uma variável específica, em vez de otimizar uma saída múltipla com menor controle sobre a tarefa.
-
-### 4. Validação cruzada
-
-A validação é feita via 5-fold cross-validation com embaralhamento, usando KFold do scikit-learn. Em cada dobra:
-
-- uma parte dos dados é usada para treino;
-- outra parte é usada para teste;
-- os modelos são treinados e avaliados independently;
-- os resultados são agregados para métricas globais.
-
-### 5. Avaliação e visualização
-
-O projeto calcula:
-
-- RMSE;
-- R²;
-- gráficos de dispersão real versus predito.
-
-Os gráficos são salvos localmente como imagens, permitindo uma análise visual direta do comportamento dos modelos.
+As métricas são implementadas em `metrics.py`. O MAPE fica indefinido quando o alvo observado é zero; nesse caso, os valores são registrados como ausentes sem remover amostras.
 
 ## Estrutura do repositório
 
-- main.py: pipeline principal de treinamento e validação em 5 folds;
-- Dataset.py: definição do dataset e carregamento dos dados;
-- views.py: funções para cálculo de métricas e geração dos gráficos;
-- models/: implementações das arquiteturas ResNet, EfficientNet e MobileNet;
-- dataset/: conjunto de metadados e imagens do experimento;
-- resultados-*/: arquivos de saída e relatórios de execução;
-- pyproject.toml: configuração do projeto e dependências.
-
-## Dependências
-
-O projeto utiliza as seguintes bibliotecas principais:
-
-- Python;
-- PyTorch;
-- TorchVision;
-- scikit-learn;
-- pandas;
-- matplotlib;
-- PIL/Pillow.
-
-A configuração do projeto também contempla dependências do ambiente via pyproject.toml.
-
-## Como executar
-
-### Instalação
-
-Recomendado:
-
-```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install -e .
+```text
+.
+|-- main.py                     Pipeline principal das CNN
+|-- Dataset.py                  Dataset legado de altura e biomassa
+|-- models/
+|   |-- MLP.py                  Regressor MLP com descritores
+|   |-- Resnet.py               Adaptacao da ResNet50
+|   |-- Mobilenet.py            Adaptacao da MobileNetV3-Large
+|   `-- Efficentnet.py          Adaptacao da EfficientNet-B0
+|-- pastagem_ml/
+|   `-- features.py             Extracao dos descritores utilizados pelo MLP
+|-- pastagem_baseline/
+|   |-- pastagem_baseline.py    Implementacao Python do app Pastagem
+|   |-- avaliar_baseline.py    Avaliacao contra o metadata
+|   `-- pesos_app.json          Pesos exportados do aplicativo Java
+|-- dataset/
+|   |-- images/
+|   `-- metadata.csv
+|-- metrics.py                  Metricas de regressao
+|-- mlp_features.py             Vetores usados pelo MLP
+|-- validation.py               Validacao em 10 folds
+|-- views.py                    Graficos e comparacoes
+|-- tests/                      Testes unitarios e de integracao sintetica
+|-- pyproject.toml              Dependencias e metadados do projeto
+`-- uv.lock                     Lockfile do ambiente
 ```
 
-Ou, se o ambiente for gerenciado com uv:
+## Requisitos
+
+- Python 3.14 ou superior.
+- PyTorch e TorchVision.
+- NumPy.
+- pandas.
+- scikit-learn.
+- Matplotlib.
+- Pillow.
+
+As dependências principais estão declaradas em `pyproject.toml`.
+
+## Instalação
+
+Com `uv`:
 
 ```bash
 uv sync
 ```
 
-### Treinamento
+Com um ambiente virtual padrão:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install -e .
+```
+
+No Windows PowerShell, a ativação do ambiente virtual é:
+
+```powershell
+.venv\Scripts\Activate.ps1
+```
+
+## Executando os experimentos
+
+### Treinamento das CNN
+
+Na raiz do projeto:
 
 ```bash
 python main.py
 ```
 
-Esse comando inicia a validação cruzada e executa o treinamento dos modelos dedicados para altura e biomassa. Ao final, as métricas e os gráficos de dispersão são gerados e exibidos/armazenados no diretório do projeto.
+O pipeline:
 
-## Resultados observados
+- Executa até 10 repetições de validação em cinco folds.
+- Treina MobileNetV3-Large, ResNet50 e EfficientNet-B0.
+- Avalia altura e biomassa separadamente.
+- Detecta automaticamente CPU ou GPU CUDA.
+- Grava as previsões, escalas, perdas e configurações em `resultados_cnn/`.
 
-Os resultados obtidos durante a execução do pipeline indicam desempenho variável entre as tarefas:
+Os parâmetros principais estão no início de `main.py`:
 
-| Tarefa | R² | RMSE |
-| --- | --- | --- |
-| Altura | 0.2031 | 4.8654 cm |
-| Biomassa | 0.5419 | 319.6064 kg/ha |
+```python
+EPOCAS = 20
+REPETICOES = 10
+BATCH_SIZE = 16
+TAXA_APRENDIZADO = 1e-4
+```
 
-Esses valores demonstram que o modelo se mostrou mais estável para estimar biomassa do que altura, embora o desempenho geral ainda seja passível de melhoria por meio de refinamento do conjunto de dados, hiperparâmetros e estratégias de treinamento.
+### Avaliação do baseline móvel
 
-## Limitações e possibilidades de evolução
+Para executar o baseline sobre uma pasta de imagens:
 
-- o conjunto de dados é relativamente pequeno para o treinamento de redes profundas em larga escala;
-- a associação entre imagem e metadado depende de convenções de nomenclatura;
-- o projeto trabalha com modelos de regressão independentes para cada variável;
-- há espaço para exploração de arquiteturas mais recentes, tuning de hiperparâmetros e técnicas de regularização.
+```bash
+python pastagem_baseline/pastagem_baseline.py dataset/images
+```
 
-Entre possíveis melhorias:
+O comando pode informar explicitamente o arquivo de saída:
 
-- uso de modelos multitarefa para prever altura e biomassa em uma única rede;
-- aumento do conjunto de dados com mais imagens e diversidade agronômica;
-- aplicação de técnicas de validação temporal ou por parcela;
-- comparação com modelos baseados em segmentação ou extração de features clássicas.
+```bash
+python pastagem_baseline/pastagem_baseline.py dataset/images -o pastagem_baseline/resultados/baseline_python.csv
+```
 
-## Conclusão
+Depois, compare as previsões com o metadata:
 
-O projeto demonstra a viabilidade de utilizar aprendizado profundo em imagens RGB para estimar variáveis agronômicas de alfafa. Embora os resultados ainda tenham margem para melhoria, a abordagem mostra potencial para automatizar monitoramento de culturas e reduzir a dependência de medições manuais intensivas.
+```bash
+python pastagem_baseline/avaliar_baseline.py \
+  pastagem_baseline/resultados/baseline_python.csv \
+  dataset/metadata.csv \
+  -o pastagem_baseline/resultados/metricas_baseline.txt
+```
 
-A estrutura modular do código permite expansão para novas arquiteturas, novos experimentos e melhor comparação de desempenho em cenários agrícolas reais.
+### Comparação dos modelos
+
+O módulo `views.py` combina diretórios de resultados que contenham `fold_metrics.csv` e `oof_predictions.csv`:
+
+```bash
+python views.py \
+  resultados_todos_10folds_20260930_170636_592764/mlp \
+  resultados_todos_10folds_20260930_170636_592764/mobilenet \
+  resultados_todos_10folds_20260930_170636_592764/resnet \
+  resultados_todos_10folds_20260930_170636_592764/efficientnet \
+  --output comparacoes
+```
+
+Os diretórios comparados devem usar o mesmo conjunto de dados e os mesmos folds.
+
+## Testes
+
+Execute todos os testes disponíveis com:
+
+```bash
+python -m unittest discover -s tests -v
+```
+
+Os testes validam:
+
+- Fórmulas de R², WI, RMSE, MAE e MAPE.
+- Comportamento indefinido de métricas.
+- Extratores de características equivalentes ao código Java.
+- Cobertura e reprodução dos 10 folds.
+- Rejeição de arquivos antigos com cinco folds.
+- Geração dos gráficos e alinhamento das previsões.
+- Integração sintética com PyTorch, quando disponível.
+
+## Resultados disponíveis
+
+O diretório `resultados_todos_10folds_20260930_170636_592764/` contém uma execução consolidada em dez folds. A tabela abaixo resume a média dos folds registrados nesse diretório.
+
+| Modelo | Alvo | R² médio | RMSE médio |
+| --- | --- | --- | --- |
+| MLP | Altura | -4.877 | 10.673 cm |
+| MLP | Biomassa | -0.087 | 476.317 kg/ha |
+| MobileNetV3-Large | Altura | -0.947 | 7.194 cm |
+| MobileNetV3-Large | Biomassa | 0.149 | 410.148 kg/ha |
+| ResNet50 | Altura | -0.264 | 5.837 cm |
+| ResNet50 | Biomassa | 0.397 | 351.668 kg/ha |
+| EfficientNet-B0 | Altura | -1.373 | 7.980 cm |
+| EfficientNet-B0 | Biomassa | 0.289 | 378.305 kg/ha |
+
+Esses valores são resultados experimentais registrados no repositório e não substituem uma avaliação independente. Entre os modelos CNN consolidados, a ResNet50 apresentou o melhor RMSE médio nos dois alvos dessa execução.
+
+## Organização dos resultados
+
+Os resultados principais podem incluir:
+
+- `oof_predictions.csv`: previsões out-of-fold por amostra.
+- `fold_metrics.csv`: métricas por modelo, alvo e fold.
+- `summary_folds.csv`: média e desvio das métricas entre os folds.
+- `diagnostico_*.png`: gráficos observado versus predito e resíduos.
+- `comparacao_*.png`: comparação dos modelos por fold.
+- `erros_absolutos_*.png`: distribuição dos erros absolutos.
+- `loss_*_*.csv`: histórico de perda durante o treinamento CNN.
+
+## Limitações
+
+- O conjunto de dados é limitado para redes profundas em larga escala.
+- Algumas métricas por fold podem ficar indefinidas na presença de alvos iguais ou iguais a zero.
+- Os resultados dependem da identidade visual e da diversidade das parcelas.
+- O treinamento deve evitar critérios de divisão aleatórios que misturem a mesma parcela entre treino e teste.
+- Pesos pré-treinados exigem acesso à internet na primeira execução, caso ainda não estejam armazenados no cache local.
+- Os resultados devem ser interpretados junto com a estrutura amostral e a distribuição dos alvos.
+
+## Extensões possíveis
+
+- Ajuste sistemático de hiperparâmetros.
+- Aumento e balanceamento do conjunto de dados.
+- Validação externa por campanha, cultivar ou região.
+- Modelo único com duas saídas.
+- Segmentação da planta antes da extração de atributos.
+- Comparação com modelos tabulares e arquiteturas recentes.
+- Empacotamento da inferência em uma aplicação ou API.
+
+## Licença
+
+MIT License
+
+Copyright (c) 2026 Lukas de Sá
+

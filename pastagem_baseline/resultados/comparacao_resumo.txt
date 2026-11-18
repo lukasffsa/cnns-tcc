@@ -1,0 +1,32 @@
+ALTURA (cm), 10 repeticao(oes), folds por parcela
+  metricas sobre todas as imagens fora do fold: media (desvio padrao) entre repeticoes
+  MobileNet V3-Large              R2=  -1.910 (0.184)  WI=   0.527 (0.029)  RMSE=   9.293 (0.301)  MAE=   7.272 (0.195)  MAPE=  18.719 (0.536)
+  LASSO                           R2=   0.407 (0.027)  WI=   0.773 (0.011)  RMSE=   4.197 (0.094)  MAE=   3.327 (0.088)  MAPE=   8.773 (0.215)
+  SVR                             R2=   0.370 (0.041)  WI=   0.767 (0.012)  RMSE=   4.323 (0.140)  MAE=   3.430 (0.132)  MAPE=   9.043 (0.321)
+  MLP                             R2=   0.378 (0.086)  WI=   0.753 (0.066)  RMSE=   4.288 (0.295)  MAE=   3.395 (0.238)  MAPE=   8.959 (0.628)
+  Média do treino                 R2=  -0.022 (0.011)  WI=   0.041 (0.008)  RMSE=   5.509 (0.029)  MAE=   4.314 (0.019)  MAPE=  11.664 (0.046)
+  Média por cultivar e momento    R2=   0.529 (0.027)  WI=   0.831 (0.010)  RMSE=   3.740 (0.105)  MAE=   3.088 (0.084)  MAPE=   8.124 (0.237)
+  RMSE por fold da CNN menos o de cada alternativa (negativo = CNN melhor), 50 folds
+  vs LASSO                        media=   5.080  mediana=   5.046  CNN melhor em 0 de 50 folds
+  vs SVR                          media=   4.960  mediana=   4.943  CNN melhor em 0 de 50 folds
+  vs MLP                          media=   4.989  mediana=   5.103  CNN melhor em 0 de 50 folds
+  vs Média do treino              media=   3.762  mediana=   3.863  CNN melhor em 0 de 50 folds
+  vs Média por cultivar e momento  media=   5.525  mediana=   5.693  CNN melhor em 0 de 50 folds
+
+BIOMASSA (kg/ha), 10 repeticao(oes), folds por parcela
+  metricas sobre todas as imagens fora do fold: media (desvio padrao) entre repeticoes
+  MobileNet V3-Large              R2=  -0.373 (0.073)  WI=   0.514 (0.028)  RMSE= 529.346 (13.932)  MAE= 421.305 (11.159)  MAPE=  55.471 (2.178)
+  LASSO                           R2=   0.067 (0.070)  WI=   0.536 (0.026)  RMSE= 436.101 (16.434)  MAE= 354.419 (12.762)  MAPE=  50.082 (1.870)
+  SVR                             R2=   0.026 (0.101)  WI=   0.532 (0.036)  RMSE= 445.475 (23.171)  MAE= 361.282 (16.887)  MAPE=  50.636 (2.519)
+  MLP                             R2=  -0.121 (0.096)  WI=   0.439 (0.063)  RMSE= 478.121 (20.331)  MAE= 385.856 (17.625)  MAPE=  54.512 (3.735)
+  Média do treino                 R2=  -0.041 (0.018)  WI=   0.056 (0.014)  RMSE= 461.168 (4.078)  MAE= 393.424 (4.624)  MAPE=  57.433 (0.566)
+  Média por cultivar e momento    R2=   0.035 (0.016)  WI=   0.442 (0.011)  RMSE= 443.819 (3.773)  MAE= 364.757 (3.366)  MAPE=  50.641 (0.544)
+  RMSE por fold da CNN menos o de cada alternativa (negativo = CNN melhor), 50 folds
+  vs LASSO                        media=  92.366  mediana=  94.289  CNN melhor em 0 de 50 folds
+  vs SVR                          media=  82.550  mediana=  87.237  CNN melhor em 3 de 50 folds
+  vs MLP                          media=  52.116  mediana=  55.883  CNN melhor em 9 de 50 folds
+  vs Média do treino              media=  68.896  mediana=  68.202  CNN melhor em 5 de 50 folds
+  vs Média por cultivar e momento  media=  91.189  mediana=  82.244  CNN melhor em 2 de 50 folds
+
+Obs.: os folds de repeticoes diferentes reaproveitam as mesmas parcelas, entao nao sao
+amostras independentes. A contagem de folds serve como descricao, nao como teste estatistico.

@@ -1,0 +1,31 @@
+ALTURA (cm), folds por parcela, rep00 a rep09
+  modelo                             R2 por foto     RMSE por foto R2 por parcela  RMSE por parcela
+  Média do treino                     -0.02 (0.01)      5.51 (0.03)   -0.02 (0.01)       5.51 (0.03)
+  Média por cultivar e momento         0.53 (0.03)      3.74 (0.10)    0.53 (0.03)       3.75 (0.11)
+  LASSO manual                         0.41 (0.03)      4.20 (0.09)    0.43 (0.03)       4.13 (0.10)
+  SVR manual                           0.37 (0.04)      4.32 (0.14)    0.40 (0.04)       4.21 (0.14)
+  MLP manual                           0.38 (0.09)      4.29 (0.29)    0.41 (0.09)       4.19 (0.31)
+  ResNet-50 fine-tuning               -0.31 (0.10)      6.24 (0.25)    0.11 (0.08)       5.14 (0.23)
+  MobileNetV3 fine-tuning             -1.22 (0.29)      8.09 (0.55)   -0.62 (0.27)       6.90 (0.60)
+  EfficientNet fine-tuning            -1.91 (0.18)      9.29 (0.30)   -0.84 (0.22)       7.39 (0.45)
+  ResNet-50 congelada                  0.47 (0.03)      3.95 (0.11)    0.49 (0.03)       3.90 (0.12)
+  Congelada + manual                   0.48 (0.04)      3.92 (0.13)    0.50 (0.03)       3.86 (0.13)
+  Manual + contexto                    0.54 (0.02)      3.68 (0.09)    0.55 (0.02)       3.66 (0.09)
+  Congelada + manual + contexto        0.51 (0.03)      3.82 (0.13)    0.52 (0.03)       3.79 (0.13)
+  media (desvio padrao) entre as 10 repeticoes; 'por parcela' = media das fotos de cada parcela e momento
+
+BIOMASSA (kg/ha), folds por parcela, rep00 a rep09, CR17 fora
+  modelo                             R2 por foto     RMSE por foto R2 por parcela  RMSE por parcela
+  Média do treino                     -0.04 (0.02)    461.17 (4.08)   -0.04 (0.02)     461.56 (4.09)
+  Média por cultivar e momento         0.04 (0.02)    443.82 (3.77)    0.04 (0.02)     442.49 (3.65)
+  LASSO manual                         0.07 (0.07)    436.10 (16.43)    0.09 (0.07)     430.55 (16.44)
+  SVR manual                           0.03 (0.10)    445.47 (23.17)    0.06 (0.10)     438.15 (22.75)
+  MLP manual                          -0.12 (0.10)    478.12 (20.33)   -0.09 (0.09)     472.02 (19.29)
+  ResNet-50 fine-tuning               -0.00 (0.06)    452.09 (13.73)    0.13 (0.04)     420.62 (10.95)
+  MobileNetV3 fine-tuning             -0.27 (0.11)    509.27 (22.48)   -0.09 (0.11)     471.45 (23.79)
+  EfficientNet fine-tuning            -0.37 (0.07)    529.35 (13.93)   -0.13 (0.07)     481.14 (15.66)
+  ResNet-50 congelada                 -0.05 (0.07)    463.09 (15.19)   -0.04 (0.07)     460.19 (14.50)
+  Congelada + manual                   0.02 (0.08)    447.96 (17.14)    0.03 (0.07)     444.16 (16.66)
+  Manual + contexto                    0.12 (0.06)    422.73 (14.43)    0.14 (0.06)     420.51 (14.18)
+  Congelada + manual + contexto        0.07 (0.08)    434.79 (18.16)    0.09 (0.08)     431.14 (17.95)
+  media (desvio padrao) entre as 10 repeticoes; 'por parcela' = media das fotos de cada parcela e momento

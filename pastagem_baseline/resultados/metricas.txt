@@ -1,0 +1,19 @@
+Altura - MLP do app (cm)
+  por imagem, todos                          n=236  R2=   -3.029  RMSE=    10.94  MAE=     9.84  MAPE=   23.7%  WI= 0.406  r= 0.254  vies=    -9.51  dp_prev=    0.15  dp_med=    5.45
+  por imagem, M1                             n=119  R2=   -1.508  RMSE=     7.77  MAE=     6.78  MAPE=   17.8%  WI= 0.436  r= 0.690  vies=    -6.12  dp_prev=    0.19  dp_med=    4.91
+  por imagem, M2                             n=117  R2=  -13.365  RMSE=    13.42  MAE=    12.95  MAPE=   29.7%  WI= 0.291  r= 0.175  vies=   -12.95  dp_prev=    0.07  dp_med=    3.54
+  media das repeticoes por parcela/momento   n= 80  R2=   -3.060  RMSE=    10.99  MAE=     9.88  MAPE=   23.8%  WI= 0.406  r= 0.269  vies=    -9.56  dp_prev=    0.14  dp_med=    5.45
+
+Altura - formula linear do app (cm)
+  por imagem, todos                          n=236  R2= -114.670  RMSE=    58.62  MAE=    58.02  MAPE=  148.2%  WI= 0.126  r= 0.010  vies=   -58.02  dp_prev=    6.40  dp_med=    5.45
+  por imagem, M1                             n=119  R2= -110.084  RMSE=    51.71  MAE=    51.35  MAPE=  144.7%  WI= 0.135  r= 0.555  vies=   -51.35  dp_prev=    7.21  dp_med=    4.91
+  por imagem, M2                             n=117  R2= -335.036  RMSE=    64.90  MAE=    64.80  MAPE=  151.9%  WI= 0.082  r= 0.375  vies=   -64.80  dp_prev=    2.66  dp_med=    3.54
+  media das repeticoes por parcela/momento   n= 80  R2= -114.763  RMSE=    58.66  MAE=    58.08  MAPE=  148.2%  WI= 0.126  r= 0.012  vies=   -58.08  dp_prev=    6.24  dp_med=    5.45
+
+Biomassa - MLP do app (kg/ha)
+  por imagem, todos                          n=230  R2=  -29.595  RMSE=  2499.69  MAE=  2426.89  MAPE=  350.4%  WI= 0.252  r= 0.288  vies=  2426.89  dp_prev=  544.04  dp_med=  451.92
+  por imagem, M1                             n=116  R2=  -31.947  RMSE=  2588.88  MAE=  2490.13  MAPE=  353.5%  WI= 0.263  r= 0.408  vies=  2490.13  dp_prev=  760.47  dp_med=  451.03
+  por imagem, M2                             n=114  R2=  -27.223  RMSE=  2405.54  MAE=  2362.54  MAPE=  347.2%  WI= 0.239  r= 0.245  vies=  2362.54  dp_prev=    0.00  dp_med=  452.81
+  media das repeticoes por parcela/momento   n= 78  R2=  -29.566  RMSE=  2501.18  MAE=  2429.00  MAPE=  353.2%  WI= 0.252  r= 0.286  vies=  2429.00  dp_prev=  539.21  dp_med=  452.40
+
+Linhas do metadata sem a medida (ignoradas): CR17M1 (MS (kg/ha)), CR17M2 (MS (kg/ha))
